@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>疫情数据可视化</title>
+  <title>新冠疫情数据可视化</title>
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
@@ -27,6 +27,8 @@
   <!-- Template Main CSS File -->
   <link href="static/assets/css/style.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="static/assets/css/index.css">
+
 </head>
 
 <body>
@@ -36,7 +38,7 @@
     <div class="container">
 
       <div class="logo float-left">
-        <h1 class="text-light"><a href="{{ url_for('index') }}"><span>Maverick</span></a></h1>
+        <h1 class="text-light"><a href="{{ url_for('index') }}"><span>EQ886</span></a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
       </div>
@@ -44,10 +46,10 @@
       <nav class="nav-menu float-right d-none d-lg-block">
         <ul>
           <li><a href="/">首页</a></li>
-          <li><a href="/movie">疫情可视化动画展示</a></li>
+{#          <li><a href="/movie">中国新冠疫情累计确诊情况</a></li>#}
           <li><a href="/map">中国新冠疫情实时数据地图</a></li>
-          <li><a href="/pie">今日发生疫情省份统计</a></li>
-          <li><a href="/rank">各省累计确诊排名</a></li>
+          <li><a href="/pie">疫情确诊数据频率分布情况</a></li>
+          <li><a href="/rank">各省疫情今日确诊情况</a></li>
         </ul>
       </nav><!-- .nav-menu -->
 
@@ -60,7 +62,7 @@
 
         <div class="section-title">
           <h2>新冠疫情数据可视化</h2>
-          <p>应用Python爬虫、Flask框架、Echarts等技术实现.</p>
+          <p>本项目基于Python爬虫、Flask框架、Echarts等技术实现，目的在于为大众提供一个数据清晰明了，操作简单快捷的疫情数据展示网站。通过数据可视化技术，使大众轻易地了解疫情状况，简洁的网站让大众不会受到其他信息的干扰。</p>
         </div>
           <!-- ======= 预览板块 ======= -->
         <section class="counts section-bg">
@@ -68,13 +70,13 @@
 
         <div class="row">
 
-          <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up">
-            <a href="/movie"><div class="count-box">
-              <i class="icofont-simple-smile" style="color: #20b38e;"></i>
-              <span data-toggle="counter-up">2</span>
-              <p>疫情可视化动画展示</p>
-            </div></a>
-          </div>
+{#          <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up">#}
+{#            <a href="/movie"><div class="count-box">#}
+{#              <i class="icofont-simple-smile" style="color: #20b38e;"></i>#}
+{#              <span data-toggle="counter-up">2</span>#}
+{#              <p>疫情可视化动画展示</p>#}
+{#            </div></a>#}
+{#          </div>#}
 
           <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up" data-aos-delay="200">
             <a href="/map"><div class="count-box">
@@ -88,7 +90,7 @@
             <a href="/pie"><div class="count-box">
               <i class="icofont-users-alt-5" style="color: #ffb459;"></i>
               <span data-toggle="counter-up">1</span>
-              <p>今日发生疫情省份统计</p>
+              <p>疫情确诊数据频率分布情况</p>
             </div></a>
           </div>
 
@@ -96,7 +98,7 @@
             <a href="/rank"><div class="count-box">
               <i class="icofont-live-support" style="color: #46d1ff;"></i>
               <span data-toggle="counter-up">1</span>
-              <p>各省累计确诊排名</p>
+              <p>各省疫情今日确诊情况</p>
             </div></a>
           </div>
 
