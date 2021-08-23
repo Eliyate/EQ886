@@ -142,35 +142,103 @@
 
 <script type="text/javascript">
 
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('dom1'));
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('dom1'));
 
+        var myColor = [
+            "#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6",
+            "#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6",
+            "#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6",
+            "#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6",
+            "#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6",
+            "#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6",
+            "#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6",
+        ];
+        //2.配置echart组件
+        //option = {
+        //    title: {
+        //        subtext: '数据来自网易新闻',
+        //    },
+        //    tooltip: {
+        //        trigger: 'axis',
+        //        axisPointer: {
+        //            type: 'shadow'
+        //        }
+        //    },
+        //    grid: {
+        //        top: "10%",
+        //        left: '3%',
+        //        right: '6%',
+        //        bottom: '3%',
+        //        containLabel: true
+        //    },
+        //    xAxis: {
+        //        type: 'value',
+        //        boundaryGap: [0, 0.01],
+        //        axisLabel: {
+        //            color: "#000",
+        //            fontSize: '9'
+        //        },
+        //    },
+        //    yAxis: {
+        //        type: 'category',
+        //        inverse: true,
+        //        data: {{ province_name|tojson }},
+        //        axisLabel: {
+        //            color: "#000",
+        //        },
+        //    },
+        //    series: [
+        //        {
+        //            name: '累计确诊',
+        //            type: 'bar',
+        //            // 柱子设为圆角
+        //            itemStyle: {
+        //                normal: {
+        //                    barBorderRadius: 20,
+        //                    // dataIndex 是当前柱子的索引号
+        //                    color: function (params) {
+        //                        return myColor[params.dataIndex];
+        //                    }
+        //                }
+        //            },
+        //            data: {{ province_confirm|tojson }},
+        //        }
+        //    ]
+        //};
 
-    option = {
-        title: {
-            text: '中国累计确诊人数'
-        },
+        var option = {
+        backgroundColor: '#323a5e',
         tooltip: {
             trigger: 'axis',
-            axisPointer: {
-                animation: false,
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
                 type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
             }
         },
         grid: {
-            show: true,
-            left: '4%',
+            left: '2%',
             right: '4%',
             bottom: '14%',
             top: '16%',
             containLabel: true
+        },
+        legend: {
+            data: ['中国累计确诊人数'],
+            right: 10,
+            top: 12,
+            textStyle: {
+                color: "#fff"
+            },
+            itemWidth: 12,
+            itemHeight: 10,
+            // itemGap: 35
         },
         xAxis: {
             type: 'category',
             data: {{ province_name|tojson }},
             axisLine: {
                 lineStyle: {
-                    color: 'black'
+                    color: 'white'
 
                 }
             },
@@ -182,6 +250,7 @@
                 }
             },
         },
+
         yAxis: {
             type: 'value',
             max: 'maxdata',
@@ -199,19 +268,57 @@
             },
             axisLabel: {}
         },
+        "dataZoom": [{
+            "show": true,
+            "height": 12,
+            "xAxisIndex": [
+                0
+            ],
+            bottom: '8%',
+            "start": 10,
+            "end": 90,
+            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+            handleSize: '110%',
+            handleStyle: {
+                color: "#d3dee5",
+
+            },
+            textStyle: {
+                color: "#fff"
+            },
+            borderColor: "#90979c"
+        }, {
+            "type": "inside",
+            "show": true,
+            "height": 15,
+            "start": 1,
+            "end": 35
+        }],
         series: [{
-            name: '累计确诊',
-            type: 'line',
-            showSymbol: false,
-            hoverAnimation: false,
-            //stack: '总量',
-            data: {{ province_confirm|tojson }},
-        }]
+                name: '中国累计确诊人数',
+                type: 'bar',
+                barWidth: '15%',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#fccb05'
+                        }, {
+                            offset: 1,
+                            color: '#f5804d'
+                        }]),
+                        barBorderRadius: 12,
+                    },
+                },
+                data: {{ province_confirm|tojson }},
+            },
+        ]
     };
+
     var app = {
         currentIndex: -1,
     };
-    setInterval(function () {
+    setInterval(function() {
         var dataLen = option.series[0].data.length;
 
         // 取消之前高亮的图形
@@ -238,16 +345,17 @@
 
     }, 1000);
 
-    //3.将组件赋值给实例化对象
-    myChart.setOption(option);
-
-    //4.设定图表自适应屏幕
-    window.addEventListener("resize", function () {
-        myChart.resize();
-    });
 
 
-</script>
+        //3.将组件赋值给实例化对象
+        myChart.setOption(option);
+
+        //4.设定图表自适应屏幕
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+
+    </script>
 
 </body>
 
