@@ -151,7 +151,7 @@
 
     var option;
 
-    var updateFrequency = 2000;
+    var updateFrequency = 500;
     var dimension = 0;
 
     var countryColors = {
@@ -177,11 +177,9 @@
     };
 
     $.when(
-        {#$.getJSON('static/assets/data/data.json'),
-        $.getJSON('static/assets/data/life-expectancy-table.json')#}
         $.getJSON('static/assets/data/provinceInfo.json'),
         $.getJSON('static/assets/data/provinceTotalConfirm.json')
-    ).done(function (res0, res1) {
+    ).done(function (res0,res1) {
         var flags = res0[0];
         var data = res1[0];
         var years = [];
@@ -191,14 +189,7 @@
             }
         }
 
-        function getFlag(countryName) {
-            if (!countryName) {
-                return '';
-            }
-            return (flags.find(function (item) {
-                return item.name === countryName;
-            }) || {}).emoji;
-        }
+
 
         var startIndex = 0;
         var startYear = years[startIndex];
@@ -228,6 +219,10 @@
                 inverse: true,
                 {#max: 10,#}
                 axisLabel: {
+
+                    {#强制显示所有标签#}
+                    interval:0,
+
                     show: true,
                     textStyle: {
                         fontSize: 14
@@ -242,8 +237,8 @@
                         }
                     }
                 },
-                animationDuration: 300,
-                animationDurationUpdate: 300
+                animationDuration: 100,
+                animationDurationUpdate: 100
             },
             series: [{
                 realtimeSort: true,
@@ -302,11 +297,11 @@
                 return d[4] === year;
             });
             option.series[0].data = source;
+
             var stringYear='';
             stringYear=parseInt(year/10000).toString()+'/'+parseInt(year%10000/100).toString()+'/'+(year%100).toString();
             option.graphic.elements[0].style.text = stringYear;
-            console.log(stringYear);
-            console.log(year);
+
             myChart.setOption(option);
         }
     })
