@@ -92,10 +92,12 @@
                 <li><a href="/pie">今日发生疫情省份统计</a></li>
                 <li><a href="/rank">各省累计确诊排名</a></li>
             </ul>
-        </nav><!-- .nav-menu -->
+        </nav>
+        <!-- .nav-menu -->
 
     </div>
-</header><!-- End Header -->
+</header>
+<!-- End Header -->
 
 <!-- ======= 评分图展示 ======= -->
 <section id="team" class="team">
@@ -112,9 +114,11 @@
                 <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
                 <div id="dom1" style="width: 98%;height:650px;"></div>
             </div>
-        </section><!-- End Counts Section -->
+        </section>
+        <!-- End Counts Section -->
     </div>
-</section><!-- 结束 首页 -->
+</section>
+<!-- 结束 首页 -->
 
 
 <!-- ======= Footer ======= -->
@@ -124,7 +128,8 @@
         <div class="copyright">Copyright &copy; 2020.Company name All rights reserved.</div>
         <div class="credits"></div>
     </div>
-</footer><!-- End Footer -->
+</footer>
+<!-- End Footer -->
 
 <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
@@ -141,112 +146,173 @@
 <script src="static/assets/vendor/aos/aos.js"></script>
 
 <script type="text/javascript">
-
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('dom1'));
 
+    var option;
 
-    option = {
-        title: {
-            text: '中国累计确诊人数'
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                animation: false,
-                type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+    var updateFrequency = 2000;
+    var dimension = 0;
+
+    var countryColors = {
+        "Australia": "#00008b",
+        "Canada": "#f00",
+        "China": "#ffde00",
+        "Cuba": "#002a8f",
+        "Finland": "#003580",
+        "France": "#ed2939",
+        "Germany": "#000",
+        "Iceland": "#003897",
+        "India": "#f93",
+        "Japan": "#bc002d",
+        "North Korea": "#024fa2",
+        "South Korea": "#000",
+        "New Zealand": "#00247d",
+        "Norway": "#ef2b2d",
+        "Poland": "#dc143c",
+        "Russia": "#d52b1e",
+        "Turkey": "#e30a17",
+        "United Kingdom": "#00247d",
+        "United States": "#b22234"
+    };
+
+    $.when(
+        {#$.getJSON('static/assets/data/data.json'),
+        $.getJSON('static/assets/data/life-expectancy-table.json')#}
+        $.getJSON('static/assets/data/provinceInfo.json'),
+        $.getJSON('static/assets/data/provinceTotalConfirm.json')
+    ).done(function (res0, res1) {
+        var flags = res0[0];
+        var data = res1[0];
+        var years = [];
+        for (var i = 0; i < data.length; ++i) {
+            if (years.length === 0 || years[years.length - 1] !== data[i][4]) {
+                years.push(data[i][4]);
             }
-        },
-        grid: {
-            show: true,
-            left: '4%',
-            right: '4%',
-            bottom: '14%',
-            top: '16%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            data: {{ province_name|tojson }},
-            axisLine: {
-                lineStyle: {
-                    color: 'black'
+        }
 
+        function getFlag(countryName) {
+            if (!countryName) {
+                return '';
+            }
+            return (flags.find(function (item) {
+                return item.name === countryName;
+            }) || {}).emoji;
+        }
+
+        var startIndex = 0;
+        var startYear = years[startIndex];
+
+        var option = {
+            grid: {
+                top: 10,
+                bottom: 30,
+                left: 100,
+                right: 80
+            },
+            xAxis: {
+                max: 'dataMax',
+                label: {
+                    formatter: function (n) {
+                        return Math.round(n);
+                    }
                 }
             },
-            axisLabel: {
-                // interval: 0,
-                // rotate: 40,
-                textStyle: {
-                    fontFamily: 'Microsoft YaHei'
-                }
+            dataset: {
+                source: data.slice(1).filter(function (d) {
+                    return d[4] === startYear;
+                })
             },
-        },
-        yAxis: {
-            type: 'value',
-            max: 'maxdata',
-            axisLine: {
-                show: false,
-                lineStyle: {
-                    color: 'white'
-                }
+            yAxis: {
+                type: 'category',
+                inverse: true,
+                {#max: 10,#}
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        fontSize: 14
+                    },
+                    {#formatter: function (value) {
+                        return value + '{flag|' + getFlag(value) + '}';
+                    },#}
+                    rich: {
+                        flag: {
+                            fontSize: 25,
+                            padding: 5
+                        }
+                    }
+                },
+                animationDuration: 300,
+                animationDurationUpdate: 300
             },
-            splitLine: {
-                show: true,
-                lineStyle: {
-                    color: 'white'
+            series: [{
+                realtimeSort: true,
+                seriesLayoutBy: 'column',
+                type: 'bar',
+                itemStyle: {
+                    color: function (param) {
+                        return countryColors[param.value[3]] || '#c65454';
+                    }
+                },
+                encode: {
+                    x: dimension,
+                    y: 3
+                },
+                label: {
+                    show: true,
+                    precision: 1,
+                    position: 'right',
+                    valueAnimation: true,
+                    fontFamily: 'monospace'
                 }
-            },
-            axisLabel: {}
-        },
-        series: [{
-            name: '累计确诊',
-            type: 'line',
-            showSymbol: false,
-            hoverAnimation: false,
-            //stack: '总量',
-            data: {{ province_confirm|tojson }},
-        }]
-    };
-    var app = {
-        currentIndex: -1,
-    };
-    setInterval(function () {
-        var dataLen = option.series[0].data.length;
+            }],
+            // Disable init animation.
+            animationDuration: 0,
+            animationDurationUpdate: updateFrequency,
+            animationEasing: 'linear',
+            animationEasingUpdate: 'linear',
+            graphic: {
+                elements: [{
+                    type: 'text',
+                    right: 160,
+                    bottom: 60,
+                    style: {
+                        text: startYear,
+                        font: 'bolder 80px monospace',
+                        fill: 'rgba(100, 100, 100, 0.25)'
+                    },
+                    z: 100
+                }]
+            }
+        };
 
-        // 取消之前高亮的图形
-        myChart.dispatchAction({
-            type: 'downplay',
-            seriesIndex: 0,
-            dataIndex: app.currentIndex
-        });
-        app.currentIndex = (app.currentIndex + 1) % dataLen;
-        //console.log(app.currentIndex);
-        // 高亮当前图形
-        myChart.dispatchAction({
-            type: 'highlight',
-            seriesIndex: 0,
-            dataIndex: app.currentIndex,
-        });
-        // 显示 tooltip
-        myChart.dispatchAction({
-            type: 'showTip',
-            seriesIndex: 0,
-            dataIndex: app.currentIndex
-        });
+        // console.log(option);
+        myChart.setOption(option);
 
+        for (var i = startIndex; i < years.length - 1; ++i) {
+            (function (i) {
+                setTimeout(function () {
+                    updateYear(years[i + 1]);
+                }, (i - startIndex) * updateFrequency);
+            })(i);
+        }
 
-    }, 1000);
-
-    //3.将组件赋值给实例化对象
-    myChart.setOption(option);
-
-    //4.设定图表自适应屏幕
-    window.addEventListener("resize", function () {
-        myChart.resize();
-    });
+        function updateYear(year) {
+            var source = data.slice(1).filter(function (d) {
+                return d[4] === year;
+            });
+            option.series[0].data = source;
+            var stringYear='';
+            stringYear=parseInt(year/10000).toString()+'/'+parseInt(year%10000/100).toString()+'/'+(year%100).toString();
+            option.graphic.elements[0].style.text = stringYear;
+            console.log(stringYear);
+            console.log(year);
+            myChart.setOption(option);
+        }
+    })
 
 
+    option && myChart.setOption(option);
 </script>
 
 </body>
