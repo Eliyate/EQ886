@@ -15,22 +15,25 @@ def index():
 
 
 @web.route('/movie')
-def movie_list():
-    with codecs.open(filename='../data/shujv.csv', mode='r', encoding='utf-8') as f:
-        reader = csv.reader(f)
-        head = next(reader)
+# def movie_list():
+#     with codecs.open(filename='../data/shujv.csv', mode='r', encoding='utf-8') as f:
+#         reader = csv.reader(f)
+#         head = next(reader)
+#
+#         province_name = []
+#         province_confirm = []
+#         for item in reader:
+#             args = tuple(item)
+#             # print(args)
+#             province_name.append(args[0])
+#             province_confirm.append(args[1])
+#         print(province_name)
+#         print(province_confirm)
+#
+#     return render_template('movie.html', province_name=province_name, province_confirm=province_confirm)
 
-        province_name = []
-        province_confirm = []
-        for item in reader:
-            args = tuple(item)
-            # print(args)
-            province_name.append(args[0])
-            province_confirm.append(args[1])
-        print(province_name)
-        print(province_confirm)
-
-    return render_template('movie.html', province_name=province_name, province_confirm=province_confirm)
+def movie():
+    return render_template('movie.html')
 
 # 中国新冠疫情实时数据地图模块
 
