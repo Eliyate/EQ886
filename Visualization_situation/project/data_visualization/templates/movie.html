@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>现有确诊病例对比</title>
+    <title>各省疫情可视化动态展示</title>
     <meta content="" name="descriptison">
     <meta content="" name="keywords">
 
@@ -79,7 +79,7 @@
     <div class="container">
 
         <div class="logo float-left">
-            <h1 class="text-light"><a href="{{ url_for('index') }}"><span>Maverick</span></a></h1>
+            <h1 class="text-light"><a href="{{ url_for('index') }}"><span>EQ886</span></a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
         </div>
@@ -87,10 +87,10 @@
         <nav class="nav-menu float-right d-none d-lg-block">
             <ul>
                 <li><a href="/">首页</a></li>
-                <li><a href="/movie">疫情可视化动画展示</a></li>
+                <li><a href="/movie">各省疫情可视化动态展示</a></li>
                 <li><a href="/map">中国新冠疫情实时数据地图</a></li>
-                <li><a href="/pie">今日发生疫情省份统计</a></li>
-                <li><a href="/rank">各省累计确诊排名</a></li>
+                <li><a href="/pie">疫情确诊数据频率分布情况</a></li>
+                <li><a href="/rank">各省今日疫情情况统计</a></li>
             </ul>
         </nav>
         <!-- .nav-menu -->
@@ -104,8 +104,8 @@
     <div class="container">
 
         <div class="section-title">
-            <h2>各省各国确诊病例对比</h2>
-            <p>应用Python爬虫、Flask框架、Echarts等技术实现.</p>
+            <h2>各省疫情可视化动态展示</h2>
+            <p>使用Flask框架，通过Python爬虫更新最新累计确诊人数，利用Echarts对累计确诊人数进行可视化动态展示。</p>
         </div>
 
         <!-- ======= 预览板块 ======= -->
@@ -179,7 +179,7 @@
     $.when(
         $.getJSON('static/assets/data/provinceInfo.json'),
         $.getJSON('static/assets/data/provinceTotalConfirm.json')
-    ).done(function (res0,res1) {
+    ).done(function (res0, res1) {
         var flags = res0[0];
         var data = res1[0];
         var years = [];
@@ -188,7 +188,6 @@
                 years.push(data[i][4]);
             }
         }
-
 
 
         var startIndex = 0;
@@ -202,7 +201,13 @@
                 right: 80
             },
             xAxis: {
-                max: 'dataMax',
+                {#max: 'dataMax',#}
+                {#boundaryGap: [0, '-80%'],#}
+                {#max: function (value) {
+                    return parseInt(value.max * (20/100));
+                },#}
+                type:'log',
+                min:1,
                 label: {
                     formatter: function (n) {
                         return Math.round(n);
@@ -221,7 +226,7 @@
                 axisLabel: {
 
                     {#强制显示所有标签#}
-                    interval:0,
+                    interval: 0,
 
                     show: true,
                     textStyle: {
@@ -298,8 +303,8 @@
             });
             option.series[0].data = source;
 
-            var stringYear='';
-            stringYear=parseInt(year/10000).toString()+'/'+parseInt(year%10000/100).toString()+'/'+(year%100).toString();
+            var stringYear = '';
+            stringYear = parseInt(year / 10000).toString() + '/' + parseInt(year % 10000 / 100).toString() + '/' + (year % 100).toString();
             option.graphic.elements[0].style.text = stringYear;
 
             myChart.setOption(option);
