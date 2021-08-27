@@ -31,7 +31,6 @@ def index():
 #         print(province_confirm)
 #
 #     return render_template('movie.html', province_name=province_name, province_confirm=province_confirm)
-
 def movie():
     return render_template('movie.html')
 
@@ -62,9 +61,10 @@ def pie():
                 # today_confirm2.append({key: value})
                 today_confirm2.append({'name': key, 'value': value})
 
-        print(today_confirm2)
+        print(type(today_confirm2))
 
     return render_template('pie.html', today_confirm=today_confirm2)
+
 
 # 各省累计确诊排名模块
 
